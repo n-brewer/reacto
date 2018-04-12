@@ -1,12 +1,34 @@
-$bg-color: yellow;
-$border-color: red;
+$border-color: #1d3a3a;
 
 .app {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: white;
+  background: $border-color;
   font-family: helvetica, arial, sans-serif;
   padding: 2em;
   border: 5px solid $border-color;
+}
 
-  p {
-    background-color: $bg-color;
+.pwdInput {
+  align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  input {
+    margin-left: 10px;
+    width: 500px;
+    height: 30px;
+    left: 10px;
   }
+}
+
+.createWallet {
+  background: lightgreen;
+  margin: 25px;
+  width: 100px;
+  height: 25px;
+  left: 100px;
 }
