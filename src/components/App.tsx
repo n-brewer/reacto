@@ -2,29 +2,33 @@ import * as React from "react";
 import "./../assets/scss/App.scss";
 import {
     Account, AccountHttp, Address, MosaicHttp, MosaicService, NamespaceHttp, NetworkType, Password,
-    SimpleWallet
+    SimpleWallet,
 } from "nem2-sdk";
 
 type State = {
     account1: Account;
     account2: Account;
     selectedAccount: Account;
+    personList: Person[];
 }
 
 export default class App extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
-        this.state = {account1: null, account2: null, selectedAccount: null};
+        this.state = {account1: null, account2: null, selectedAccount: null, personList: []};
     };
 
     createNewAccount = () => {
-        const account = Account.generateNewAccount(NetworkType.MIJIN_TEST);
+        const privateKey = !this.state.account1 ? "1535B144776E65C10770938E6392880B5926B943D537D645D0541D80D5C9AAE6" : "9531BDCA4DE86E691105F5A3F3F78210D00680CE2C4A447BE4E3626805E80199";
+        const account = Account.createFromPrivateKey(privateKey, NetworkType.MIJIN_TEST);
         this.state.account1 ? this.setState({account2: account}) : this.setState({account1: account});
     };
 
-    loginToAccountWithPrivateKey = (privateKey: string) => {
-        const account = Account.createFromPrivateKey(privateKey, NetworkType.MIJIN_TEST);
-        console.log(account);
+    loginToAccountWithPrivateKey = () => {
+        const el = document.getElementById("pwdInput") as HTMLInputElement;
+        let newPerson = new Person(el.value, el.defaultValue);
+        this.state.personList.push(newPerson);
+        this.setState({personList: this.state.personList})
     };
 
     createSimpleWallet = () => {
@@ -45,17 +49,20 @@ export default class App extends React.Component<{}, State> {
         }
     };
 
-    getAccountInfo = (address: Address) => {
-        const url = 'http://localhost:3000';
+    getAccountInfo = (address: string) => {
+        const url = "http://api.beta.catapult.mijin.io:3000";
         const accountHttp = new AccountHttp(url);
         const mosaicHttp = new MosaicHttp(url);
         const namespaceHttp = new NamespaceHttp(url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp, namespaceHttp);
-        console.log(mosaicService);
-        mosaicService.mosaicsAmountViewFromAddress(address).subscribe(info => console.log(info), error => console.log(error));
+        mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress(address))
+            .flatMap((mos) => mos)
+            .subscribe(mosaic => console.log(mosaic.relativeAmount() + "," + mosaic.fullName(), mosaic.amount),
+                err => console.log(err));
     };
 
     render() {
+        const {selectedAccount, account2, account1, personList} = this.state;
         return (
             <div className="app">
                 <h1>Create Account</h1>
@@ -66,6 +73,7 @@ export default class App extends React.Component<{}, State> {
                     <div>
                         <div>
                             <input id={"pwdInput"} placeholder={"This will be used to access your account"}
+                                   defaultValue={"Blabs"}
                                    type="search"/>
                             <button className={"createWallet"} type="button"
                                     onClick={() => this.createSimpleWallet()}>Create Wallet
@@ -77,20 +85,56 @@ export default class App extends React.Component<{}, State> {
                 </button>
                 <div className={"accountInfo"}>
                     <span
-                        onClick={() => this.setState({selectedAccount: this.state.account1})}>User 1 Account: {this.state.selectedAccount === this.state.account1 && "Selected"}</span>
-                    <p>Public Address: {this.state.account1 && this.state.account1.address.pretty()}</p>
-                    <p>Private Key: {this.state.account1 && this.state.account1.privateKey}</p>
+                        onClick={() => this.setState({selectedAccount: account1})}>User 1 Account: {selectedAccount === account1 && "Selected"}</span>
+                    <p>Public Address: {account1 && account1.address.pretty()}</p>
+                    <p>Private Key: {account1 && account1.privateKey}</p>
                     <span
-                        onClick={() => this.setState({selectedAccount: this.state.account2})}>User 2 Account: {this.state.selectedAccount === this.state.account2 && "Selected"}</span>
-                    <p>PublicAddress: {this.state.account2 && this.state.account2.address.pretty()}</p>
-                    <p>Private Key: {this.state.account2 && this.state.account2.privateKey}</p>
+                        onClick={() => this.setState({selectedAccount: account2})}>User 2 Account: {selectedAccount === account2 && "Selected"}</span>
+                    <p>PublicAddress: {account2 && account2.address.pretty()}</p>
+                    <p>Private Key: {account2 && account2.privateKey}</p>
                 </div>
-                {this.state.selectedAccount && <button type="button" className={"createWallet"}
-                                                       onClick={() => this.loginToAccountWithPrivateKey(this.state.selectedAccount.privateKey)}>Login</button>}
+                {selectedAccount && <button type="button" className={"createWallet"}
+                                                       onClick={() => this.loginToAccountWithPrivateKey()}>Add
+                    Person</button>}
                 <button type="button" className={"createWallet"}
-                        onClick={() => this.getAccountInfo(this.state.selectedAccount.address)}>Account Info
+                        onClick={() => this.getAccountInfo(selectedAccount.address.pretty())}>Account Info
                 </button>
+                <div>
+                    <ToDoApp list={personList}/>
+                </div>
             </div>
         );
+    }
+}
+
+type ListProps = {
+    list: Person[];
+}
+
+export class ToDoApp extends React.Component<ListProps, {}> {
+
+    listPeople = (list: Person[]) => {
+        return list.map(dude => {
+            return <div>{`${dude.firstName} ${dude.lastName} -- a cool person`}</div>
+        })
+    };
+
+    render() {
+        const {list} = this.props;
+        return (
+            <div>
+                {this.listPeople(list)}
+            </div>
+        );
+    }
+}
+
+class Person {
+    firstName: string;
+    lastName: string;
+
+    constructor(firstName: string, lastName: string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
