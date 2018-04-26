@@ -4,6 +4,7 @@ import {
     Account, AccountHttp, Address, MosaicHttp, MosaicService, NamespaceHttp, NetworkType, Password,
     SimpleWallet,
 } from "nem2-sdk";
+import MovieMadness from "./movie-madness";
 
 type State = {
     account1: Account;
@@ -63,6 +64,7 @@ export default class App extends React.Component<{}, State> {
 
     render() {
         const {selectedAccount, account2, account1, personList} = this.state;
+        if (!account1) { return <MovieMadness/>}
         return (
             <div className="app">
                 <h1>Create Account</h1>
@@ -113,9 +115,13 @@ type ListProps = {
 
 export class ToDoApp extends React.Component<ListProps, {}> {
 
+    handleClick = (event: any) => {
+        event.currentTarget.innerHTML = "changed"
+    };
+
     listPeople = (list: Person[]) => {
         return list.map(dude => {
-            return <div>{`${dude.firstName} ${dude.lastName} -- a cool person`}</div>
+            return <div onClick={(blabs) => this.handleClick(blabs)}>{`${dude.firstName} ${dude.lastName} -- a cool person`}</div>
         })
     };
 

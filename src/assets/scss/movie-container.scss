@@ -1,0 +1,16 @@
+
+.containerBody {
+  display: flex;
+  flex-direction: column;
+  background: aliceblue;
+  height: 100%;
+  width: 100%;
+}
+
+.titleBar {
+  background: cornflowerblue;
+  width: 100%;
+  height: 70px;
+  border-bottom: 2px solid gray;
+}
+
