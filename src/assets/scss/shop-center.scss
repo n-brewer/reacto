@@ -1,0 +1,36 @@
+
+.shopBody {
+  display: flex;
+  flex-direction: column;
+  color: #1d3a3a;
+  position: absolute;
+  background: floralwhite;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.shopHeaderBar {
+  display: flex;
+  background: #1d4c72;
+  width: 100%;
+  height: 80px;
+  color: white;
+  border-bottom: 2px solid #1991f9;
+  justify-content: flex-end;
+
+  div:first-child {
+    padding-right: 15px;
+    letter-spacing: 1px;
+  }
+}
+
+.shopModalBody {
+  height: 90%;
+  width: 90%;
+  background: whitesmoke;
+  border-radius: 5px;
+  margin-top: -30px;
+  border: 2px solid #1991f9;
+}
+

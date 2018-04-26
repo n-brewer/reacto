@@ -49,7 +49,8 @@ module.exports = {
     ],
     node: {
         tls: 'empty',
-        net: 'empty'
+        net: 'empty',
+        fs: 'empty'
     },
     externals: {
         'react': 'React',
