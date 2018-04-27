@@ -1,7 +1,9 @@
 import * as React from "react";
 
 import "../assets/scss/shop-center.scss";
+
 const logo = require("../assets/img/react_logo.svg");
+
 interface State {
     shoppingList: Array<ShopItem>;
 }
@@ -19,26 +21,34 @@ export default class ShopCenter extends React.Component<{}, State> {
             listArray = [...listArray, item];
         });
         this.setState({shoppingList: listArray});
-    }
+    };
 
     displayList = (list: Array<ShopItem>) => {
         return list.map(item => {
             return (
-                <div key={item.name}>{item.name}</div>
+                <div key={item.name} className={"itemCell"}>
+                    <div>
+                        {item.name}
+                    </div>
+                </div>
             );
         });
-    }
+    };
 
     render() {
         const {shoppingList} = this.state;
-        if (shoppingList.length <= 0) { this.loadInventoryList(); }
+        if (shoppingList.length <= 0) {
+            this.loadInventoryList();
+        }
         return (
             <div className="shopBody">
                 <div className="shopHeaderBar">
                     <div>Home | Support | Contact | Account</div>
                 </div>
                 <div className="shopModalBody">
-                    {this.displayList(shoppingList)}
+                    <div className={"itemContainer"}>
+                        {this.displayList(shoppingList)}
+                    </div>
                 </div>
             </div>
         );
@@ -66,6 +76,26 @@ export const Inventory = [{
     sale: false
 }, {
     name: "Shirt",
+    imgPath: logo,
+    price: 10.00,
+    sale: true
+}, {
+    name: "Pants",
+    imgPath: logo,
+    price: 5.00,
+    sale: false
+}, {
+    name: "Active Wear",
+    imgPath: logo,
+    price: 10.00,
+    sale: true
+}, {
+    name: "Skimpy",
+    imgPath: logo,
+    price: 5.00,
+    sale: false
+}, {
+    name: "Hats",
     imgPath: logo,
     price: 10.00,
     sale: true

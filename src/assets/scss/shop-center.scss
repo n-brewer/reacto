@@ -34,3 +34,19 @@
   border: 2px solid #1991f9;
 }
 
+.itemContainer {
+  height: 100%;
+  width: 200px;
+  border-right: 2px solid #1991f9;
+}
+
+.itemCell {
+  font-size: 0.8rem;
+  line-height: 20px;
+  border: 1px solid #d5e5e5;
+  height: 20px;
+  text-align: left;
+  padding-left: 5px;
+  margin-left: 0.5px;
+}
+

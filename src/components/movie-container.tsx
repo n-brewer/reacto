@@ -20,8 +20,7 @@ export default class MovieContainer extends React.Component<MovieContainerProps,
         fetch('https://randomuser.me/api/?results=4').then(results => {
             return results.json();
         }).then(data => {
-            let pics = data.results;
-            console.log(pics);
+
         })
     }
 
